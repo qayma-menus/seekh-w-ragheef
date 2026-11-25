@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>استوديو طباعة الـ QR — سيخ و رغيف</title>
+    <link rel="icon" href="./assets/mascot.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alexandria:wght@700;800;900&family=Cairo:wght@600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <style>
+      .qr-toolbar {
+        background: #ffffff;
+        border-bottom: 2px solid var(--ink);
+        padding: 16px 0;
+      }
+      .qr-bar-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .poster-qr-wrap {
+        max-width: 420px;
+        margin: 32px auto;
+        background: var(--brand-primary);
+        color: #ffffff;
+        border: 4px solid var(--ink);
+        box-shadow: 6px 6px 0 var(--ink);
+        padding: 28px 24px;
+        text-align: center;
+      }
+      .poster-qr-logo {
+        width: 92px;
+        height: 92px;
+        object-fit: cover;
+        border: 3px solid var(--brand-accent);
+        background: var(--brand-primary);
+      }
+      .poster-qr-frame {
+        background: #ffffff;
+        color: var(--ink);
+        border: 3px solid var(--ink);
+        padding: 16px;
+        max-width: 250px;
+        margin: 20px auto 0 auto;
+      }
+      .tables-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 18px;
+        margin-top: 28px;
+      }
+      .table-tent {
+        background: #ffffff;
+        border: 2px solid var(--ink);
+        box-shadow: 4px 4px 0 var(--ink);
+        padding: 16px;
+        text-align: center;
+        break-inside: avoid;
+      }
+      @media print {
+        .tables-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .poster-qr-wrap,
+        .table-tent {
+          box-shadow: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="qr-toolbar no-print">
+      <div class="container">
+        <div class="qr-bar-row">
+          <div style="display:flex;align-items:center;gap:10px">
+            <a href="./index.html" class="btn-outline-paper">العودة للمنيو</a>
+            <div>
+              <strong style="font-family:var(--font-display);font-size:16px" id="qr-page-title">
+                استوديو كروت الـ QR
+              </strong>
+              <div style="font-size:11px;color:var(--ink-muted);font-weight:700">
+                عدّل رابط الموقع الحي بالأسفل قبل الطباعة أو التحميل
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px">
+            <button type="button" id="btn-dl-png" class="btn-outline-paper" style="background:var(--brand-accent)">
+              تحميل صورة QR (PNG)
+            </button>
+            <button type="button" onclick="window.print()" class="btn-add" style="padding:7px 16px">
+              طباعة جاهزة (A4)
+            </button>
+          </div>
+        </div>
+
+        <div class="qr-bar-row" style="margin-top:12px">
+          <div style="display:flex;gap:8px">
+            <button type="button" id="tab-main" class="option-btn selected">
+              كارت الكاشير والواجهة
+            </button>
+            <button type="button" id="tab-tables" class="option-btn">
+              كروت الترابيزات المرقمة
+            </button>
+          </div>
+
+          <div style="display:flex;gap:8px;flex:1;max-width:420px">
+            <input
+              type="url"
+              dir="ltr"
+              id="base-url-input"
+              class="text-input"
+              style="font-family:monospace;font-size:12px"
+            />
+          </div>
+
+          <div id="table-count-wrap" class="hidden" style="display:flex;align-items:center;gap:6px">
+            <span style="font-size:12px;font-weight:900">عدد الترابيزات:</span>
+            <select id="table-count" class="option-btn">
+              <option value="4">4</option>
+              <option value="6" selected>6</option>
+              <option value="8">8</option>
+              <option value="10">10</option>
+              <option value="12">12</option>
+              <option value="16">16</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <main class="container" id="qr-canvas-root"></main>
+
+    <script src="./data.js"></script>
+    <script src="./vendor/qr.js"></script>
+    <script>
+      (function () {
+        var R = window.RESTAURANT_DATA;
+        var C = window.CREDITS_CONFIG || {};
+        var mode = "main";
+        var urlInput = document.getElementById("base-url-input");
+        var countSelect = document.getElementById("table-count");
+        var countWrap = document.getElementById("table-count-wrap");
+
+        document.getElementById("qr-page-title").textContent =
+          "استوديو كروت الـ QR — " + R.name;
+
+        var defaultUrl = window.location.href
+          .split("?")[0]
+          .replace(/\/qr\.html$/, "/");
+        urlInput.value = defaultUrl;
+
+        function render() {
+          var baseUrl = urlInput.value.trim() || defaultUrl;
+          var root = document.getElementById("qr-canvas-root");
+
+          if (mode === "main") {
+            countWrap.classList.add("hidden");
+            document.getElementById("btn-dl-png").classList.remove("hidden");
+            var svg = window.QaymaQR.toSVG(baseUrl, { margin: 2 });
+            root.innerHTML =
+              '<div class="poster-qr-wrap">' +
+              '  <img class="poster-qr-logo" src="' + R.logoImage + '" alt="' + R.name + '">' +
+              '  <h2 style="margin:10px 0 4px 0;font-family:var(--font-display);font-size:28px;font-weight:900">' + R.name + '</h2>' +
+              '  <span style="display:inline-block;background:var(--brand-accent);color:var(--ink);border:1.5px solid var(--ink);padding:2px 12px;font-size:12px;font-weight:900">' + R.tagline + '</span>' +
+              '  <div class="poster-qr-frame">' +
+              svg +
+              '    <div style="margin-top:8px;font-size:12px;font-weight:900">امسح الكود بالكاميرا واطلب أونلاين</div>' +
+              '  </div>' +
+              '  <p style="margin:16px 0 4px 0;font-size:12px;font-weight:800">تصفح المنيو كامل بالأسعار وابعت طلبك على واتساب في ثواني</p>' +
+              '  <div dir="ltr" style="color:var(--brand-accent);font-size:16px;font-weight:900">' + R.phone + '</div>' +
+              '  <div style="margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.25);font-size:10px;font-weight:700;opacity:0.85">تصميم وتطوير ' + (C.developerName || "م/ محمد عبدالستار") + '</div>' +
+              '</div>';
+          } else {
+            countWrap.classList.remove("hidden");
+            document.getElementById("btn-dl-png").classList.add("hidden");
+            var n = parseInt(countSelect.value, 10) || 6;
+            var cards = [];
+            for (var t = 1; t <= n; t++) {
+              var sep = baseUrl.indexOf("?") >= 0 ? "&" : "?";
+              var tUrl = baseUrl + sep + "table=" + t;
+              var tSvg = window.QaymaQR.toSVG(tUrl, { margin: 2 });
+              cards.push(
+                '<div class="table-tent">' +
+                '  <div style="display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:12px">' +
+                '    <div style="display:flex;align-items:center;gap:8px;text-align:right">' +
+                '      <img src="' + R.logoImage + '" alt="" style="width:38px;height:38px;object-fit:cover;border:1.5px solid var(--ink)">' +
+                '      <div>' +
+                '        <div style="font-family:var(--font-display);font-size:14px;font-weight:900">' + R.name + '</div>' +
+                '        <div style="font-size:10px;color:var(--ink-muted);font-weight:700">' + R.tagline + '</div>' +
+                '      </div>' +
+                '    </div>' +
+                '    <span style="background:var(--brand-primary);color:#fff;border:1.5px solid var(--ink);padding:3px 10px;font-size:12px;font-weight:900">ترابيزة ' + t + '</span>' +
+                '  </div>' +
+                '  <div style="max-width:170px;margin:0 auto;border:2px solid var(--ink);padding:6px">' + tSvg + '</div>' +
+                '  <div style="margin-top:10px;font-size:12px;font-weight:900">امسح الكود واطلب على ترابيزتك</div>' +
+                '</div>'
+              );
+            }
+            root.innerHTML = '<div class="tables-grid">' + cards.join("") + '</div>';
+          }
+        }
+
+        document.getElementById("tab-main").addEventListener("click", function () {
+          mode = "main";
+          this.classList.add("selected");
+          document.getElementById("tab-tables").classList.remove("selected");
+          render();
+        });
+
+        document.getElementById("tab-tables").addEventListener("click", function () {
+          mode = "tables";
+          this.classList.add("selected");
+          document.getElementById("tab-main").classList.remove("selected");
+          render();
+        });
+
+        urlInput.addEventListener("input", render);
+        countSelect.addEventListener("change", render);
+
+        document.getElementById("btn-dl-png").addEventListener("click", function () {
+          var baseUrl = urlInput.value.trim() || defaultUrl;
+          var dataUrl = window.QaymaQR.toDataURL(baseUrl, { width: 700, margin: 2 });
+          var a = document.createElement("a");
+          a.href = dataUrl;
+          a.download = R.slug + "-qr.png";
+          a.click();
+        });
+
+        render();
+      })();
+    </script>
+  </body>
+</html>

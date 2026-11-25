@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#EC1525" />
+    <title>سيخ و رغيف — المنيو والطلب أونلاين | كوم حمادة</title>
+    <meta
+      name="description"
+      content="سيخ و رغيف .. مش زي أي رغيف — تصفح المنيو الكامل بالأسعار واطلب مباشرة عبر واتساب في كوم حمادة."
+    />
+    <meta property="og:title" content="سيخ و رغيف — مش زي أي رغيف" />
+    <meta
+      property="og:description"
+      content="أصل الكبدة الإسكندراني الحرشة، المشويات ع الفحم، ورغيف كباب الحلة في كوم حمادة — اطلب أونلاين الآن."
+    />
+    <meta property="og:url" content="https://seekh-w-ragheef.qayma.me/" />
+    <meta property="og:image" content="https://seekh-w-ragheef.qayma.me/assets/cover.jpg" />
+    <meta property="og:locale" content="ar_EG" />
+    <link rel="icon" href="./assets/mascot.jpg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alexandria:wght@700;800;900&family=Cairo:wght@500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <!-- شريط رقم الترابيزة عند مسح QR الصالة -->
+    <div id="table-banner" class="table-banner hidden"></div>
+
+    <!-- الهيدر وهوية المطعم -->
+    <header id="header-root" class="site-header"></header>
+
+    <!-- البحث وشريط أقسام المنيو الثابت -->
+    <div class="sticky-controls">
+      <div class="container">
+        <div class="search-row">
+          <div class="search-box">
+            <input
+              type="text"
+              id="search-input"
+              placeholder="ابحث في المنيو.. (كبدة، سدق، كباب حلة، مانجا...)"
+            />
+          </div>
+          <button type="button" id="btn-popular" class="btn-popular">
+            الأكثر طلباً
+          </button>
+        </div>
+        <nav id="cat-strip" class="cat-strip" aria-label="أقسام المنيو"></nav>
+      </div>
+    </div>
+
+    <!-- أقسام وأصناف المنيو -->
+    <main id="menu-root" class="container menu-main"></main>
+
+    <!-- الفوتر والـ Credits -->
+    <footer id="footer-root" class="site-footer"></footer>
+
+    <!-- شريط السلة العائم -->
+    <div id="floating-cart-root" class="floating-cart hidden"></div>
+
+    <!-- النوافذ المنبثقة (تخصيص الصنف / السلة / المنيو الورقي) -->
+    <div id="modals-root"></div>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
