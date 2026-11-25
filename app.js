@@ -561,7 +561,9 @@
       contactBtns +=
         '<a class="btn-wa-top" href="https://wa.me/' +
         esc(br.whatsapp) +
-        '" target="_blank" rel="noopener">واتساب الفرع</a>';
+        '" target="_blank" rel="noopener">' +
+        (branches && branches.length > 1 ? "واتساب الفرع" : "واتساب مباشر") +
+        "</a>";
     }
 
     document.getElementById("header-root").innerHTML =

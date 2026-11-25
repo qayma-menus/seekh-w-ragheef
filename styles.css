@@ -24,6 +24,8 @@ html {
   scroll-behavior: smooth;
   font-family: var(--font-body);
   direction: rtl;
+  max-width: 100%;
+  overflow-x: clip;
 }
 
 body {
@@ -35,7 +37,8 @@ body {
     linear-gradient(to bottom, rgba(24, 18, 18, 0.04) 1px, transparent 1px);
   background-size: 28px 28px;
   color: var(--ink);
-  overflow-x: hidden;
+  max-width: 100%;
+  overflow-x: clip;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -275,6 +278,7 @@ a {
 .search-box {
   position: relative;
   flex: 1;
+  min-width: 0;
 }
 
 .search-box input {
@@ -435,13 +439,13 @@ a {
 /* Items Grid */
 .items-grid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 14px;
 }
 
 @media (min-width: 768px) {
   .items-grid {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 }
 
@@ -472,7 +476,8 @@ a {
 
 .item-head {
   display: flex;
-  align-items: baseline;
+  align-items: flex-start;
+  justify-content: space-between;
   gap: 8px;
 }
 
@@ -480,13 +485,15 @@ a {
   margin: 0;
   font-size: 16px;
   font-weight: 900;
-  flex-shrink: 0;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 
 .price-leader {
-  flex: 1;
+  flex: 1 1 12px;
+  align-self: center;
   height: 6px;
-  min-width: 12px;
+  min-width: 8px;
   background-image: radial-gradient(#bfb5aa 1.25px, transparent 1.25px);
   background-size: 7px 4px;
   background-repeat: repeat-x;
