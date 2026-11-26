@@ -476,6 +476,8 @@
     if (state.checkout.note.trim()) {
       lines.push("*ملاحظات إضافية:* " + state.checkout.note.trim());
     }
+    lines.push("──────────────");
+    lines.push("_عبر منيو قايمة الرقمي | qayma.me_");
     return lines.join("\n");
   }
 
@@ -667,10 +669,10 @@
       "  </div>" +
       '  <div class="credits-bar">' +
       '    <div class="credits-text">' +
-      "      <div>صُمم وطُوّر بواسطة <strong>" +
+      '      <div>منيو رقمي من <a href="https://qayma.me" target="_blank" rel="noopener" style="text-decoration:underline"><strong>قايمة (qayma.me)</strong></a> • تنفيذ <strong>' +
       esc(C.developerName || "م/ محمد عبدالستار") +
       "</strong></div>" +
-      "      <p>عندك مطعم أو حلواني أو كافيه؟ احصل على منيو رقمي لمشروعك مجاناً</p>" +
+      "      <p>عندك مطعم أو حلواني أو كافيه؟ احصل على منيو رقمي وكود QR لمشروعك مجاناً</p>" +
       "    </div>" +
       '    <div class="credits-actions">' +
       '      <a class="btn-qr-link" href="./qr.html">طباعة كود QR</a>' +
@@ -1357,6 +1359,22 @@
                 esc(br.phone) +
                 "</a>"
               : "") +
+            "      </div>" +
+            '      <div style="margin-top:10px;padding-top:8px;border-top:1px dashed rgba(0,0,0,0.12);text-align:center;font-size:11px;font-weight:700;color:var(--ink-muted)">' +
+            '        تعمل بواسطة <a href="https://qayma.me" target="_blank" rel="noopener" style="color:var(--ink);font-weight:900;text-decoration:underline">قايمة qayma.me</a> — <a href="' +
+            esc(
+              C.whatsapp
+                ? "https://wa.me/" +
+                    C.whatsapp +
+                    "?text=" +
+                    encodeURIComponent(
+                      "أهلاً م/ محمد، عجبتني تجربة الطلب في منيو " +
+                        R.name +
+                        " وحابب أعمل منيو رقمي لمشروعي"
+                    )
+                : "https://qayma.me"
+            ) +
+            '" target="_blank" rel="noopener" style="color:var(--brand-primary);font-weight:900">احصل على منيو مجاني لمطعمك</a>' +
             "      </div>" +
             "    </div>"
           : "") +
